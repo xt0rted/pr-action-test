@@ -1,0 +1,23 @@
+name: Issue Comment
+
+on:
+  issue_comment
+
+jobs:
+  comment:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: Details
+        uses: actions/github-script@0.2.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data } = await github.pulls.get({ ...context.repo, number: context.issue.number });
+            console.log(data);
